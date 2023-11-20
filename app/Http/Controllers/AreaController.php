@@ -3,38 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\{Area,Employee,Patient};
+use App\Services\AllService;
 
 class AreaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $allService;
+    public function __construct(AllService $allService)
+    {
+        $this->allService = $allService;
+    }
     public function index()
     {
         $areas=Area::all();
         return view('area.index',['areas'=>$areas]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function checkArea(Request $request)
     {
         $area = $request->input('area');
@@ -44,8 +29,8 @@ class AreaController extends Controller
     }
     public function store(Request $request)
     {
-        $input=$request->all();
-        Area::create($input);
+        $data=$request->all();
+        $this->allService->store(Area::class, $data);
         return redirect()->route('area.index')->with('flash_message', 'Addedd!');
     }
 
@@ -199,8 +184,9 @@ class AreaController extends Controller
      */
     public function update(Request $request, Area $area)
     {
-        $input=$request->all();
-        $area->update($input);
+        $data=$request->all();
+        $this->allService->updateModel($area, $data);
+
         return redirect()->route('area.index')->with('flash_message', 'Updated!');
 
     }
@@ -211,10 +197,9 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Area $area)
     {
-        $area =Area::find($id);
-        $area->delete();
+        $this->allService->deleteModel(Area::class, $area->id);
         return redirect()->route('area.index')->with('flash_message', 'deleted!');  
     }
 }

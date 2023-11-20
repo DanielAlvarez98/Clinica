@@ -58,7 +58,8 @@
                             @forelse ($patients as $patient)
                             <tr class="persona">
                               <td>{{$loop->iteration}}</td>
-                              <td class="table-img"><img src="{{$patient->photo}}"></td>
+                              <td class="table-img"><img src={{$patient->photo}}>
+                              </td>
                               <td class="info-nombre">{{$patient->name}}</td>
                               <td>{{$patient->lastname}}</td>
                               <td>{{$patient->birthday}}</td>

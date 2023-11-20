@@ -5,36 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
+use App\Services\AllService;
+
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $allService;
+    public function __construct(AllService $allService)
+    {
+        $this->allService = $allService;
+    }
     public function index()
     {
         $patients=Patient::all();
         return view('patient.index',['patients'=>$patients]);
 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function checkPaciente(Request $request)
     {
         $email = $request->input('email');
@@ -46,42 +31,25 @@ class PatientController extends Controller
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required'],
-            'lastname' => ['required'],
-            'birthday' => ['required'],
-            'dni' => ['required', 'integer', 'digits:8', 'unique:patients'],
-            'phone' => ['required','string','min:9'],
-            'email'=>['required','string','max:100','unique:patients'],
-            'gender' => ['required'],
-            'photo' => [''],
-
-        ]);
+        $data = $request->all();
         
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        $imagen = $request->file('photo');
-        $nombreArchivo = md5(time() . $imagen->getClientOriginalName()) . '.' . $imagen->getClientOriginalExtension();
-        $rutaArchivo = 'assets/img/fotos/' . $nombreArchivo;
-
-        $imagen->move(public_path('assets/img/fotos/'), $nombreArchivo);
-
-        $request['photo'] = $rutaArchivo;
-        }else {
-            $request['photo'] = 'assets/img/fotos/default.png'; 
+            $imagen = $request->file('photo');
+            $nombreArchivo = md5(time() . $imagen->getClientOriginalName()) . '.' . $imagen->getClientOriginalExtension();
+            $rutaArchivo = 'assets/img/fotos/' . $nombreArchivo;
+    
+            $imagen->move(public_path('assets/img/fotos/'), $nombreArchivo);
+    
+            $data['photo'] = $rutaArchivo;
+        } else {
+            $data['photo'] = 'assets/img/fotos/default.png'; 
         }
-        Patient::create([
-            'name'=>$request['name'],
-            'lastname'=>$request['lastname'],
-            'birthday'=>$request['birthday'],
-            'dni'=>$request['dni'],
-            'phone'=>$request['phone'],
-            'email'=>$request['email'],
-            'gender'=>$request['gender'],
-            'photo'=>$request['photo'],
-
-        ]);
-        return redirect()->route('patient.index')->with('flash_message', 'Addedd!');
+        
+        $this->allService->store(Patient::class, $data);
+    
+        return redirect()->route('patient.index')->with('flash_message', 'Added!');
     }
+    
 
     /**
      * Display the specified resource.
@@ -114,8 +82,8 @@ class PatientController extends Controller
      */
     public function update(Request $request, Patient $patient)
     {
-        $input=$request->all();
-        $patient->update($input);
+        $data=$request->all();
+        $this->allService->updateModel($patient, $data);
 
         return redirect()->route('patient.index')->with('flash_message', 'Updated!');
     }
@@ -126,17 +94,10 @@ class PatientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Patient $patient)
     {
-        $patient =Patient::find($id);
-        $imagen=$patient->photo;
-        $patient->delete();
-        
-        if ($imagen !== 'assets/img/fotos/default.png') {
-            if (!empty($imagen) && file_exists(public_path($imagen))) {
-                unlink(public_path($imagen));
-            }
-        }
+        $this->allService->deletePhoto($patient->photo);
+        $this->allService->deleteModel(Patient::class, $patient->id);
         return redirect()->route('patient.index')->with('flash_message', 'deleted!');  
     }
 }

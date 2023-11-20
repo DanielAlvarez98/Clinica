@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
-use App\Models\Role;
+use App\Models\{Employee,Role};
 use Illuminate\Http\Request;
+
+use App\Services\AllService;
 
 class EmployeeController extends Controller
 {
@@ -13,6 +14,12 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $allService;
+
+    public function __construct(AllService $allService)
+    {
+        $this->allService=$allService;
+    }
     public function index()
     {
         $employees=Employee::whereHas('roles', function ($query) {
@@ -40,7 +47,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+        $data = $request->all();
         
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
         $imagen = $request->file('photo');
@@ -49,13 +56,16 @@ class EmployeeController extends Controller
 
         $imagen->move(public_path('assets/img/fotos/'), $nombreArchivo);
 
-        $input['photo'] = $rutaArchivo;
+        $data['photo'] = $rutaArchivo;
         }else {
-            $input['photo'] = 'assets/img/fotos/default.png'; 
+            $data['photo'] = 'assets/img/fotos/default.png'; 
         }
-        Employee::create($input);
-        return redirect()->route('employee.index')->with('flash_message', 'Addedd!');
-    }
+
+        $this->allService->store(Employee::class, $data);
+
+            return redirect()->route('employee.index')->with('flash_message', 'Addedd!');
+        }
+
     
 
     /**
@@ -96,7 +106,7 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
-        $input=$request->all();
+        $data=$request->all();
 
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             $imagen = $request->file('photo');
@@ -110,12 +120,13 @@ class EmployeeController extends Controller
                 }
             }
             $imagen->move(public_path('assets/img/fotos/'), $nombreArchivo);
-            $input['photo'] = $rutaArchivo;
+            $data['photo'] = $rutaArchivo;
         } else {
-            $input['photo'] = $employee->photo;
+            $data['photo'] = $employee->photo;
         }
+        
+        $this->allService->updateModel($employee,$data);
 
-        $employee->update($input);
         return redirect()->route('employee.index')->with('flash_message', 'Updated!');
     }
 
@@ -127,14 +138,11 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        $imagen=$employee->photo;
-        $employee->delete();
-        
-        if ($imagen !== 'assets/img/fotos/default.png') {
-            if (!empty($imagen) && file_exists(public_path($imagen))) {
-                unlink(public_path($imagen));
-            }
-        }
-        return redirect()->route('employee.index')->with('flash_message', 'deleted!');  
+        $this->allService->deletePhoto($employee->photo);
+        $this->allService->deleteModel(Employee::class, $employee->id);
+        return redirect()->route('employee.index')->with('flash_message', 'Deleted!');  
     }
+    
+    
+
 }
