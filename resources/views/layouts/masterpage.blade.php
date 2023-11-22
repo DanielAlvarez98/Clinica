@@ -22,7 +22,7 @@
             <div class="col-12 col-md-6">
               <ul class="nav nav-footer justify-content-center justify-content-lg-end">
                 <li class="nav-item">
-                  <a href="https://www.linkedin.com/in/dany-alvarez-2b403323a/" class="nav-link text-black" target="_blank">Linkedin</a>
+                  <a href="https://www.linkedin.com/in/daniel-laura98/" class="nav-link text-black" target="_blank">Linkedin</a>
                 </li>
                 <li class="nav-item">
                   <a href="https://github.com/DanielAlvarez98/Clinica" class="nav-link text-black" target="_blank">GitHub</a>
