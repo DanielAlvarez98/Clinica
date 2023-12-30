@@ -80,7 +80,9 @@ class PatientController extends Controller
         $folders = $patient->folders;
 
         return view('patient.show', [
-            'patient' => $patient        ]);
+            'patient' => $patient,
+            'folders' => $folders
+        ]);
     }
 
     /**
