@@ -10,14 +10,19 @@ use App\Services\AllService;
 class PatientController extends Controller
 {
     protected $allService;
-    public function __construct(AllService $allService)
+    public function __construct(AllService $Service)
     {
-        $this->allService = $allService;
+        $this->allService = $Service;
     }
-    public function index()
+    public function index(Request $request)
     {
-        $patients=Patient::all();
-        return view('patient.index',['patients'=>$patients]);
+        if($request->ajax()){
+            return $this->allService->getDatatable();
+        }
+        return view('patient.index');
+        
+        // $patients=Patient::all();
+        // return view('patient.index',['patients'=>$patients]);
 
     }
     public function checkPaciente(Request $request)
@@ -57,9 +62,25 @@ class PatientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Patient $patient)
     {
-        //
+        $patient->loadMissing(
+            [
+                'file' => fn ($query) =>
+                $query->where('file_type', 'imagenes')
+                    ->where('category', 'patient'),
+
+                'folders' => fn ($query2) =>
+                $query2->where('level', 1),
+
+                'type'
+            ],
+        );
+
+        $folders = $patient->folders;
+
+        return view('patient.show', [
+            'patient' => $patient        ]);
     }
 
     /**

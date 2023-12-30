@@ -14,15 +14,13 @@ class CreateQuotesTable extends Migration
     public function up()
     {
         Schema::create('quotes', function (Blueprint $table) {
-            $table->integer('id',true);
-            $table->integer('id_patient');
-            $table->integer('id_schedule');
+            $table->id();
+            $table->foreignId('id_patient')->nullable()->constrained('patients');
+            $table->foreignId('id_schedule')->nullable()->constrained('schedules');
             $table->time('start_time');
             $table->time('end_time');
             $table->text('description');
             $table->char('status',1);
-            $table->foreign('id_patient')->references('id')->on('patients');
-            $table->foreign('id_schedule')->references('id')->on('schedules');
             $table->timestamps();
         });
     }

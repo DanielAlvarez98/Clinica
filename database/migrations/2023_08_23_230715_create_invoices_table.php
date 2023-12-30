@@ -14,11 +14,10 @@ class CreateInvoicesTable extends Migration
     public function up()
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->integer('id',true);
+            $table->id();
             $table->string('codigo',50);
-            $table->integer('id_patient');
+            $table->foreignId('id_patient')->nullable()->constrained('patients');
             $table->date('date_issue');
-            $table->foreign('id_patient')->references('id')->on('patients');
             $table->timestamps();
         });
     }

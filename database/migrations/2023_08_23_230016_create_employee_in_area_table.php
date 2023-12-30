@@ -14,12 +14,10 @@ class CreateEmployeeInAreaTable extends Migration
     public function up()
     {
         Schema::create('employee_in_area', function (Blueprint $table) {
-            $table->integer('id',true);
-            $table->integer('id_employee');
-            $table->integer('id_area');
+            $table->id();
+            $table->foreignId('id_employee')->nullable()->constrained('employees');
+            $table->foreignId('id_area')->nullable()->constrained('areas');
             $table->char('status',1);
-            $table->foreign('id_employee')->references('id')->on('employees');
-            $table->foreign('id_area')->references('id')->on('areas');
             $table->timestamps();
         });
     }

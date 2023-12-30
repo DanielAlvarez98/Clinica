@@ -14,14 +14,12 @@ class CreateDiagnosisTable extends Migration
     public function up()
     {
         Schema::create('diagnosis', function (Blueprint $table) {
-            $table->integer('id',true);
-            $table->integer('id_history');
-            $table->integer('id_patienArea');
+            $table->id();
+            $table->foreignId('id_history')->nullable()->constrained('medical_history');
+            $table->foreignId('id_patienArea')->nullable()->constrained('areas');
             $table->string('diagnosi',100);
             $table->text('treatment');
             $table->date('date');
-            $table->foreign('id_history')->references('id')->on('medical_history');
-            $table->foreign('id_patienArea')->references('id')->on('areas');
             $table->timestamps();
         });
     }

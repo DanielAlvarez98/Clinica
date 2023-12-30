@@ -358,6 +358,9 @@ mat-row.mat-mdc-row, mat-header-row.mat-mdc-header-row, mat-footer-row.mat-mdc-f
 {
    background-color: #F44335;
 }
+.content-patient-btn{
+  color: blue;
+}
 
 
 

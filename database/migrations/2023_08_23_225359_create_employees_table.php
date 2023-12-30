@@ -14,9 +14,8 @@ class CreateEmployeesTable extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->integer('id',true);
-            $table->integer('id_rol');
-            $table->foreign('id_rol')->references('id')->on('roles');
+            $table->id();
+            $table->foreignId('id_rol')->nullable()->constrained('roles');
             $table->string('name',50);
             $table->string('lastname',50);
             $table->string('dni',8)->unique();

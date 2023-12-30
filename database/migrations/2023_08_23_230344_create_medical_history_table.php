@@ -14,10 +14,9 @@ class CreateMedicalHistoryTable extends Migration
     public function up()
     {
         Schema::create('medical_history', function (Blueprint $table) {
-            $table->integer('id',true);
-            $table->integer('id_patient');
+            $table->id();
+            $table->foreignId('id_patient')->nullable()->constrained('patients');
             $table->date('date_visit');
-            $table->foreign('id_patient')->references('id')->on('patients');
             $table->timestamps();
         });
     }

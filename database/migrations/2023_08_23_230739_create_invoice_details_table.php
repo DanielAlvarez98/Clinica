@@ -14,12 +14,10 @@ class CreateInvoiceDetailsTable extends Migration
     public function up()
     {
         Schema::create('invoice_details', function (Blueprint $table) {
-            $table->integer('id',true);
-            $table->integer('id_invoice');
-            $table->integer('id_medicine');
+            $table->id();
+            $table->foreignId('id_invoice')->nullable()->constrained('invoices');
+            $table->foreignId('id_medicine')->nullable()->constrained('medicines');
             $table->integer('amount');
-            $table->foreign('id_invoice')->references('id')->on('invoices');
-            $table->foreign('id_medicine')->references('id')->on('medicines');
             $table->timestamps();
         });
     }

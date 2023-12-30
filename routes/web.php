@@ -1,9 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{HomeController,AreaController,EmployeeController,
-UserController,PatientController,MedicineController,QuoteController,InvoiceController,
-HistoryController,ScheduleController};
+use App\Http\Controllers\{
+    HomeController,
+    AreaController,
+    EmployeeController,
+    UserController,
+    PatientController,
+    MedicineController,
+    QuoteController,
+    InvoiceController,
+    HistoryController,
+    ScheduleController
+};
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,9 +63,7 @@ Route::patch('/Departamentos/ActualizarPaciente/{area}/{patient}', [AreaControll
 Route::delete('/Departamentos/paciente/Eliminar/{area}/{patient}', [AreaController::class, 'patientDelete'])->name('area.pacientDelete');
 
 
-
-
-Route::get('/Horarios',[ScheduleController::class, 'index'])->name('schedule.index');
+Route::get('/Horarios', [ScheduleController::class, 'index'])->name('schedule.index');
 Route::get('/Horarios/{day}', [ScheduleController::class, 'show'])->name('schedule.show');
 Route::post('/Horarios/{day}/registrar-trabajador', [ScheduleController::class, 'registerEmployee'])->name('schedule.register');
 Route::get('/Horarios/editAjaxHorario/{day}/{employee}', [ScheduleController::class, 'editAjaxHorario'])->name('schedule.horarioUpdateAjax');
@@ -63,15 +71,13 @@ Route::patch('/Horarios/ActualizarHorario/{day}/{employee}', [ScheduleController
 
 Route::delete('/Horarios/trabajador/Eliminar/{day}/{employee}', [ScheduleController::class, 'scheduleDelet'])->name('schedule.destroy');
 
-
-
-
-
 Route::get('/Pacientes', [PatientController::class, 'index'])->name('patient.index');
+
 Route::post('/check-paciente', [PatientController::class, 'checkPaciente'])->name('checkPaciente');
 Route::post('/Pacientes-register', [PatientController::class, 'store'])->name('patient.register');
+Route::get('/Pacientes/ver/{patient}', [PatientController::class, 'show'])->name('patient.show');
 Route::patch('/Pacientes/Actualizar/{patient}', [PatientController::class, 'update'])->name('patient.update');
-Route::get('/Pacientes/editarAjax/{patient}',[PatientController::class, 'editAjax'])->name('patient.updateAjax');
+Route::get('/Pacientes/editarAjax/{patient}', [PatientController::class, 'editAjax'])->name('patient.updateAjax');
 Route::delete('/Pacientes-delete/{patient}', [PatientController::class, 'destroy'])->name('patient.delete');
 
 
@@ -79,7 +85,7 @@ Route::get('/Medicinas', [MedicineController::class, 'index'])->name('medicine.i
 Route::post('/Medicinas-register', [MedicineController::class, 'store'])->name('medicine.register');
 Route::post('/check-medicine', [MedicineController::class, 'checkMedicine'])->name('checkMedicine');
 Route::patch('/Medicinas/Actualizar/{medicine}', [MedicineController::class, 'update'])->name('medicine.Update');
-Route::get('/Medicinas/editarAjax/{medicine}',[MedicineController::class, 'editAjax'])->name('medicine.UpdateAjax');
+Route::get('/Medicinas/editarAjax/{medicine}', [MedicineController::class, 'editAjax'])->name('medicine.UpdateAjax');
 Route::delete('/Medicinas-delete/{medicine}', [MedicineController::class, 'destroy'])->name('medicine.delete');
 
 
@@ -91,16 +97,15 @@ Route::get('/Citas/editarAjaxCita/{schedule}/{patient}', [QuoteController::class
 Route::delete('/Citas/paciente/Eliminar/{schedule}/{patient}', [QuoteController::class, 'destroy'])->name('cita.delete');
 
 
-
 Route::get('/HistorialMedico', [HistoryController::class, 'index'])->name('medicalHistory.index');
 Route::get('/HistorialMedico/{history}', [HistoryController::class, 'show'])->name('medicalHistory.show');
 Route::post('/HistorialMedico-register', [HistoryController::class, 'store'])->name('medicalHistory.register');
 Route::patch('/HistorialMedico/Actualizar/{history}', [HistoryController::class, 'update'])->name('history.Update');
-Route::get('/HistorialMedico/editarAjax/{history}',[HistoryController::class, 'editAjax'])->name('history.UpdateAjax');
+Route::get('/HistorialMedico/editarAjax/{history}', [HistoryController::class, 'editAjax'])->name('history.UpdateAjax');
 
 Route::post('/HistorialMedico/{history}/register-diagnostico', [HistoryController::class, 'registerDiagnostico'])->name('diagnostico.register');
 Route::patch('/HistorialMedico/Diagnostico/Actualizar/{history}/{area}', [HistoryController::class, 'diagnosisUpdate'])->name('diagnostico.Update');
-Route::get('/HistorialMedico/Diagnostico/editarAjax/{history}/{area}',[HistoryController::class, 'daignosisEditAjax'])->name('diagnostico.UpdateAjax');
+Route::get('/HistorialMedico/Diagnostico/editarAjax/{history}/{area}', [HistoryController::class, 'daignosisEditAjax'])->name('diagnostico.UpdateAjax');
 Route::delete('/HistorialMedico/Diagnostico/Eliminar/{history}/{diagnose}', [HistoryController::class, 'diagnosisDelete'])->name('diagnosis.delete');
 Route::delete('/HistorialMedico/Eliminar/{history}', [HistoryController::class, 'destroy'])->name('medicalHistory.delete');
 
@@ -108,16 +113,16 @@ Route::delete('/HistorialMedico/Eliminar/{history}', [HistoryController::class, 
 Route::get('/Facturas', [InvoiceController::class, 'index'])->name('invoice.index');
 Route::post('/Facturas-register', [InvoiceController::class, 'store'])->name('invoice.register');
 Route::patch('/Facturas/Actualizar/{invoice}', [InvoiceController::class, 'update'])->name('invoice.Update');
-Route::get('/Facturas/editarAjax/{invoice}',[InvoiceController::class, 'editAjax'])->name('invoice.UpdateAjax');
+Route::get('/Facturas/editarAjax/{invoice}', [InvoiceController::class, 'editAjax'])->name('invoice.UpdateAjax');
 Route::delete('/Facturas/Eliminar/{invoice}', [InvoiceController::class, 'destroy'])->name('invoice.delete');
 
-Route::get('/Facturas/Descargar/{invoice}/',[InvoiceController::class, 'factura'])->name('factura');
+Route::get('/Facturas/Descargar/{invoice}/', [InvoiceController::class, 'factura'])->name('factura');
 
 
 Route::get('/Facturas/Detalles/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
 Route::post('/Facturas/{invoice}/register-Medicines', [InvoiceController::class, 'registerMedicines'])->name('invoiceDetaills.register');
 Route::patch('/Facturas/Detalles/Actualizar/{invoice}/{medicine}', [InvoiceController::class, 'invDetUpdate'])->name('invoiceDet.Update');
-Route::get('/Facturas/Detalles/editarAjax/{invoice}/{medicine}',[InvoiceController::class, 'invDetUpdateAjax'])->name('invoiceDet.UpdateAjax');
+Route::get('/Facturas/Detalles/editarAjax/{invoice}/{medicine}', [InvoiceController::class, 'invDetUpdateAjax'])->name('invoiceDet.UpdateAjax');
 Route::delete('/Facturas/Eliminar-Detalle/{invoice}/{medicine}', [InvoiceController::class, 'DetInvoiceDelete'])->name('invoiceDetaills.delete');
 
 

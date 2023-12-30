@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'id_employee'=>'1',
             'username' => 'daniel98',
-            'password'=>Hash::make('123456789')
+            'password'=>Hash::make('griceldaX66')
         ]);
 
         $days=[
