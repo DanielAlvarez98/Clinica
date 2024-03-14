@@ -4,19 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Employee_in_Area,Medicine,Patient};
+use App\Models\{Employee_in_Area, Medicine, Patient, Area};
+use App\Services\DashboardService;
 
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    private $dashboardService;
+    public function __construct(DashboardService $service)
     {
-        $this->middleware('auth');
+            $this->dashboardService=$service;
     }
 
     /**
@@ -26,14 +23,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $employeeAreas = Employee_in_Area::where('status',1)->get();
-        $medicines=Medicine::all();
-        $patients=Patient::all();
+        $employeeAreas = Employee_in_Area::where('status', 1)->get();
+        $medicines = Medicine::all();
+        $patients = Patient::all();
+        $pat_count= Patient::count();
+        $patientOfArea= $this->dashboardService->getCountPatient();
 
-        return view('home', ['employeeAreas' => $employeeAreas,
-        'medicines'=>$medicines,'patients'=>$patients]);
+        return view('home', [
+            'employeeAreas' => $employeeAreas,
+            'medicines' => $medicines,
+            'patients' => $patients,
+            'patientOfArea'=>$patientOfArea,
+            'pat_count'=>$pat_count
+        ]);
 
     }
-    
+
 }
 

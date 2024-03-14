@@ -9,11 +9,7 @@ use App\Models\{Patient,Schedule};
 
 class QuoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $schedules = Schedule::whereHas('employeeInAreas', function ($query) {
@@ -25,22 +21,7 @@ class QuoteController extends Controller
         return view('quote.index',['schedules' => $schedules]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request,Schedule $schedule)
     {
         $patient = Patient::findOrFail($request['id_patient']);
@@ -71,12 +52,7 @@ class QuoteController extends Controller
         return view('quote.show',['patients'=>$patients,'pacientes'=>$pacientes,'schedule'=>$schedule]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function editAjaxCita(Schedule $schedule, Patient $patient)
     {
         $pivotData = $patient->quotes()
@@ -100,13 +76,6 @@ class QuoteController extends Controller
     }
     
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function updateCita(Request $request, Schedule $schedule, Patient $patient)
     {
         
@@ -122,12 +91,7 @@ class QuoteController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Schedule $schedule,Patient $patient)
     {
         $patient->quotes()->detach($schedule);

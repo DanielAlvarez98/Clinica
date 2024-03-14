@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Area,Employee,Patient};
+use App\Models\{Area, Employee, Patient};
 use App\Services\AllService;
 
 class AreaController extends Controller
@@ -15,8 +15,8 @@ class AreaController extends Controller
     }
     public function index()
     {
-        $areas=Area::all();
-        return view('area.index',['areas'=>$areas]);
+        $areas = Area::all();
+        return view('area.index', ['areas' => $areas]);
     }
 
 
@@ -25,26 +25,22 @@ class AreaController extends Controller
         $area = $request->input('area');
         $valueArea = Area::where('area', $area)->exists();
 
-        return response()->json(['valueArea'=>$valueArea]);
+        return response()->json(['valueArea' => $valueArea]);
     }
     public function store(Request $request)
     {
-        $data=$request->all();
+        $data = $request->all();
         $this->allService->store(Area::class, $data);
         return redirect()->route('area.index')->with('flash_message', 'Addedd!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Area $area)
     {
 
         $employee_areas = $area->employeeAreas;
 
+        dd($employee_areas);
         $employees = Employee::whereDoesntHave('employeeAreas', function ($query) use ($area) {
             $query->where('id_area', $area->id);
         })->whereHas('roles', function ($query) {
@@ -60,8 +56,8 @@ class AreaController extends Controller
 
     public function registerEmployee(Request $request, Area $area)
     {
-        
-        $employee_status=$request['status'] = 1; 
+
+        $employee_status = $request['status'] = 1;
 
         $employees = Employee::findOrFail($request['id_employee_area']);
 
@@ -71,28 +67,28 @@ class AreaController extends Controller
 
         return redirect()->route('area.show', $area)->with('flash_message', 'Addedd!');
     }
-    public function editAjaxEmployeeArea(Area $area,Employee $employee)
+    public function editAjaxEmployeeArea(Area $area, Employee $employee)
     {
-        $status=$employee->employeeAreas()
-            ->wherePivot('id_area',$area->id)
+        $status = $employee->employeeAreas()
+            ->wherePivot('id_area', $area->id)
             ->first()->pivot->status;
 
-       $nombreEm=$employee->roles->rol.'|'.$employee->dni.'|'.$employee->name.'|'.$employee->lastname;
-        
-       return response()->json([
-           'status'=>$status,
-           'nameComplet'=> $nombreEm
-       ]);
+        $nombreEm = $employee->roles->rol . '|' . $employee->dni . '|' . $employee->name . '|' . $employee->lastname;
+
+        return response()->json([
+            'status' => $status,
+            'nameComplet' => $nombreEm
+        ]);
     }
 
-    public function editEmployeeArea(Request $request,Area $area,Employee $employee )
+    public function editEmployeeArea(Request $request, Area $area, Employee $employee)
     {
-        $status=$request['employee_active']=='on' ? 1 : 0;
+        $status = $request['employee_active'] == 'on' ? 1 : 0;
 
-        $employee->employeeAreas()->updateExistingPivot($area,[
-            'status'=>$status
+        $employee->employeeAreas()->updateExistingPivot($area, [
+            'status' => $status
         ]);
-        return redirect()->route('area.show',$area)->with('flash_message', 'Updated!');
+        return redirect()->route('area.show', $area)->with('flash_message', 'Updated!');
 
     }
 
@@ -102,12 +98,7 @@ class AreaController extends Controller
 
         return redirect()->route('area.show', $area)->with('flash_message', 'deleted!');
     }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
 
     public function showPatient(Area $area)
     {
@@ -124,8 +115,8 @@ class AreaController extends Controller
     }
     public function registerPaciente(Request $request, Area $area)
     {
-        
-        $patient_status=$request['status'] = 1; 
+
+        $patient_status = $request['status'] = 1;
 
         $patient = Patient::findOrFail($request['id_patient_area']);
 
@@ -138,24 +129,24 @@ class AreaController extends Controller
 
     public function editAjaxPacienteArea(Area $area, Patient $patient)
     {
-        $status=$patient->patientsAreas()
-            ->wherePivot('id_area',$area->id)
+        $status = $patient->patientsAreas()
+            ->wherePivot('id_area', $area->id)
             ->first()->pivot->status;
-            
-        $nameCom=$patient->dni.'|'.$patient->name.'|'.$patient->lastname;
+
+        $nameCom = $patient->dni . '|' . $patient->name . '|' . $patient->lastname;
 
         return response()->json([
-            'status'=>$status,
-            'nameComp'=>$nameCom
+            'status' => $status,
+            'nameComp' => $nameCom
         ]);
     }
 
-    public function editPacienteArea(Request $request,Area $area, Patient $patient )
+    public function editPacienteArea(Request $request, Area $area, Patient $patient)
     {
-        $status=$request['patient_active']=='on' ? 1 : 0;
+        $status = $request['patient_active'] == 'on' ? 1 : 0;
 
-        $patient->patientsAreas()->updateExistingPivot($area,[
-            'status'=>$status
+        $patient->patientsAreas()->updateExistingPivot($area, [
+            'status' => $status
         ]);
         return redirect()->route('area.showPaciente', $area)->with('flash_message', 'Updated!');
 
@@ -168,38 +159,27 @@ class AreaController extends Controller
     }
 
 
-    
+
 
     public function editAjax(Area $area)
     {
         return response()->json($area);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Area $area)
     {
-        $data=$request->all();
+        $data = $request->all();
         $this->allService->updateModel($area, $data);
 
         return redirect()->route('area.index')->with('flash_message', 'Updated!');
 
     }
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function destroy(Area $area)
     {
         $this->allService->deleteModel(Area::class, $area->id);
-        return redirect()->route('area.index')->with('flash_message', 'deleted!');  
+        return redirect()->route('area.index')->with('flash_message', 'deleted!');
     }
 }

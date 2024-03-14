@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
+use App\Services\PatientService;
 use App\Services\AllService;
+
 
 class PatientController extends Controller
 {
+    protected $allPatients;
     protected $allService;
-    public function __construct(AllService $Service)
+    public function __construct(PatientService $allPatients, AllService $allService)
     {
-        $this->allService = $Service;
+        $this->allPatients = $allPatients;
+        $this->allService = $allService;
+
     }
     public function index(Request $request)
     {
         if($request->ajax()){
-            return $this->allService->getDatatable();
+            return $this->allPatients->getDatatable();
         }
         return view('patient.index');
         
@@ -67,13 +72,13 @@ class PatientController extends Controller
         $patient->loadMissing(
             [
                 'file' => fn ($query) =>
-                $query->where('file_type', 'imagenes')
-                    ->where('category', 'patient'),
+                $query->where('file_type', 'pdf')
+                    ->where('category', 'pacientes'),
 
                 'folders' => fn ($query2) =>
                 $query2->where('level', 1),
 
-                'type'
+                // 'type'
             ],
         );
 
@@ -85,24 +90,12 @@ class PatientController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function editAjax(Patient $patient)
     {
         return response()->json($patient);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Patient $patient)
     {
         $data=$request->all();
@@ -111,12 +104,6 @@ class PatientController extends Controller
         return redirect()->route('patient.index')->with('flash_message', 'Updated!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Patient $patient)
     {
         $this->allService->deletePhoto($patient->photo);

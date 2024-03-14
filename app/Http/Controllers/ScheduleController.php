@@ -11,16 +11,13 @@ use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $days=Weekday::all();
+        $employees = Employee_in_Area::where('status', 1)->get();
 
-        return view('schedule.index',['days'=>$days]);
+        return view('schedule.index',['days'=>$days,'employees'=>$employees]);
     }
 
     public function show(Weekday $day)
@@ -36,22 +33,7 @@ class ScheduleController extends Controller
         return view('schedule.show',['day'=>$day,'employeesAreas'=>$employee_Area,'employees'=>$employees]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function registerEmployee(Request $request, Weekday $day)
     {
       $employee_Area=Employee_in_Area::findOrFail($request['id_employeeArea']);
@@ -64,20 +46,7 @@ class ScheduleController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function editAjaxHorario(Weekday $day,Employee_in_Area $employee)
     {
 
@@ -99,13 +68,6 @@ class ScheduleController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function updateHorario(Request $request,Weekday $day,Employee_in_Area $employee)
     {
 
@@ -120,12 +82,6 @@ class ScheduleController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function scheduleDelet(Weekday $day,Employee_in_Area $employee)
     {
         $employee->schedules()->detach($day);

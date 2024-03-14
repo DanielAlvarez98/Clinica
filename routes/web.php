@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     QuoteController,
     InvoiceController,
     HistoryController,
-    ScheduleController
+    ScheduleController,
+    FolderController
 };
 
 /*
@@ -80,14 +81,31 @@ Route::patch('/Pacientes/Actualizar/{patient}', [PatientController::class, 'upda
 Route::get('/Pacientes/editarAjax/{patient}', [PatientController::class, 'editAjax'])->name('patient.updateAjax');
 Route::delete('/Pacientes-delete/{patient}', [PatientController::class, 'destroy'])->name('patient.delete');
 
+Route::controller(FolderController::class)->group(function () {
+    Route::get('/{folder}/archivos', 'showFiles')->name('files.index');
+    Route::post('/crear-carpeta/{patient}', 'store')->name('folder.create');
+    Route::get('/Pacientes/carpeta/ver-carpeta/{folder}', 'show')->name('folder.view');
+    Route::post('/{folder}/añadirArchivo', 'storeFile')->name('folders.file.store');
+    Route::patch('/{folder}/actualizar', 'update')->name('folder.update');
+    Route::delete('/{folder}/eliminar', 'destroy')->name('folder.destroy');
+
+
+    Route::get('/archivo/{file}/descargar', 'downloadFile')->name('folders.file.download');
+    Route::delete('/archivo/{file}/eliminar', 'destroyFile')->name('patient.file.delete');
+
+
+
+
+});
 
 Route::get('/Medicinas', [MedicineController::class, 'index'])->name('medicine.index');
+Route::post('/tabledit/action', [MedicineController::class, 'action'])->name('tabledit.action');
+
 Route::post('/Medicinas-register', [MedicineController::class, 'store'])->name('medicine.register');
 Route::post('/check-medicine', [MedicineController::class, 'checkMedicine'])->name('checkMedicine');
 Route::patch('/Medicinas/Actualizar/{medicine}', [MedicineController::class, 'update'])->name('medicine.Update');
 Route::get('/Medicinas/editarAjax/{medicine}', [MedicineController::class, 'editAjax'])->name('medicine.UpdateAjax');
 Route::delete('/Medicinas-delete/{medicine}', [MedicineController::class, 'destroy'])->name('medicine.delete');
-
 
 Route::get('/Citas', [QuoteController::class, 'index'])->name('quote.index');
 Route::get('/Citas/{schedule}', [QuoteController::class, 'show'])->name('quote.show');

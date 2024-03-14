@@ -8,7 +8,7 @@
         @yield('content')
       </div>
     </div>
-    <footer class="footer py-4  ">
+    <footer class="footer">
         <div class="container-fluid">
             <div class="row align-items-center justify-content-lg-between">
             <div class="col-12 col-md-6 my-auto">

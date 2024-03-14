@@ -11,7 +11,7 @@ class CreateEmployeeInAreaTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up():void
     {
         Schema::create('employee_in_area', function (Blueprint $table) {
             $table->id();

@@ -3,18 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\QueryException; // Importa la excepción QueryException
 use App\Models\Medicine;
 use App\Models\Patient;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\PDF;
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $invoices=Invoice::all();
@@ -24,22 +20,7 @@ class InvoiceController extends Controller
         'patients'=>$patients]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $input=$request->all();
@@ -58,13 +39,7 @@ class InvoiceController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Invoice $invoice)
     {
         $input=$request->all();
@@ -73,12 +48,7 @@ class InvoiceController extends Controller
         return redirect()->route('invoice.index')->with('flash_message', 'Updated!');
 
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Invoice $invoice)
     {
         $medicenes=Medicine::whereDoesntHave('invoiceDetails',function($query) use ($invoice){
@@ -142,20 +112,6 @@ class InvoiceController extends Controller
         return redirect()->route('invoice.show', $invoice)->with('flash_message', 'deleted!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-   
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();
@@ -185,7 +141,7 @@ class InvoiceController extends Controller
         $grav=$preciT-$igv;
         
 
-        $pdf = \PDF::loadView('invoice.factura', compact('invoice', 'invoiceDets','preciT','igv','grav'));
+        $pdf = Pdf::loadView('invoice.factura', compact('invoice', 'invoiceDets','preciT','igv','grav'));
         $pdf_name='factura.pdf';
         return $pdf->stream($pdf_name);
 

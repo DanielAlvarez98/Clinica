@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Invoice extends Model
 {
@@ -33,7 +34,7 @@ class Invoice extends Model
     public function patients(){
         return $this->belongsTo(Patient::class,'id_patient','id');
     }
-    public function invoiceDetails(){
+    public function invoiceDetails():BelongsToMany{
         return $this->belongsToMany(Medicine::class,'invoice_details','id_invoice','id_medicine')
         ->withPivot(['id','amount'])->withTimestamps();
     }

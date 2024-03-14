@@ -17,7 +17,9 @@
   <link href="{{asset('assets/css/nucleo-svg.css')}}" rel="stylesheet" />
   <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
   <link href="{{asset('https://cdn.datatables.net/v/bs4/dt-1.13.7/r-2.5.0/datatables.min.css')}} " rel="stylesheet" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css"
+  integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Font Awesome Icons -->
   <script src="{{asset('https://kit.fontawesome.com/42d5adcbca.js')}}" crossorigin="anonymous"></script>
@@ -26,4 +28,5 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="{{asset('assets/css/material-dashboard.css?v=3.1.0')}}" rel="stylesheet" />
 
+  @yield('css')
 </head>
