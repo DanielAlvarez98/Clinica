@@ -40,7 +40,6 @@ class AreaController extends Controller
 
         $employee_areas = $area->employeeAreas;
 
-        dd($employee_areas);
         $employees = Employee::whereDoesntHave('employeeAreas', function ($query) use ($area) {
             $query->where('id_area', $area->id);
         })->whereHas('roles', function ($query) {
