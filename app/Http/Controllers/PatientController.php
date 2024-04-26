@@ -25,9 +25,7 @@ class PatientController extends Controller
             return $this->allPatients->getDatatable();
         }
         return view('patient.index');
-        
-        // $patients=Patient::all();
-        // return view('patient.index',['patients'=>$patients]);
+
 
     }
     public function checkPaciente(Request $request)
@@ -61,12 +59,7 @@ class PatientController extends Controller
     }
     
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Patient $patient)
     {
         $patient->loadMissing(
