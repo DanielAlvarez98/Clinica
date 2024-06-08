@@ -106,8 +106,9 @@
                             <div class="col-6">
                                 <div class="input-group input-group-outline me-2">
                                     <select id="gender_edit" class="form-control gender" name="gender" required>
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Femenino">Femenino</option>
+                                        @foreach ($genders as $gender)
+                                        <option value="{{$gender->value}}">{{$gender->description}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -212,8 +213,9 @@
                             <div class="input-group input-group-outline me-2">
                                 <select id="gender" class="form-control" name="gender" required>
                                     <option selected disabled>Genero</option>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Femenino">Femenino</option>
+                                    @foreach ($genders as $gender)
+                                    <option value="{{$gender->value}}">{{$gender->description}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -251,7 +253,7 @@
                         <div class="col-6">
                             <div class="input-group input-group-outline me-2">
                                 <label class="form-label">Celular</label>
-                                <input id="phone" type="number" class="form-control" name="phone" required>
+                                <input id="phone" type="telephone" class="form-control" name="phone" required>
                                 <span id="phono-min" class="invalid-feedback" role="alert">
                                     <i class="fa-solid fa-triangle-exclamation fa-bounce"></i>
                                     El numero de celular debe tener minimo 9 caracteres

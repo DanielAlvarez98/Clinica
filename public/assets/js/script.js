@@ -7,7 +7,7 @@ import {
 } from "./function.js";
 
 $(document).ready(function () {
-    $("#submitBtn").click(function (e) {
+    $("#submitBtn").on('click',function (e) {
         e.preventDefault();
 
         var username = $("#username").val();
@@ -32,7 +32,7 @@ $(document).ready(function () {
                         password === passwordConfirmation &&
                         password.length >= 8
                     ) {
-                        $("#userRegister").submit();
+                        $("#userRegister").trigger("submit");
                     } else if (password != passwordConfirmation) {
                         $("#password-lenght-message").hide();
                         $("#password-coincide-message").show();
@@ -47,7 +47,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $("#submitbtnPaciente").click(function (e) {
+    $("#submitbtnPaciente").on('click', function (e) {
         e.preventDefault();
         var name = $("#name").val();
         var email = $("#email").val();
@@ -79,7 +79,9 @@ $(document).ready(function () {
                     date != "" &&
                     phone.length >= 9
                 ) {
-                    $("#paciente-register").submit();
+
+                    $("#paciente-register").trigger("submit");
+
                 } else if (
                     dni.length === "" ||
                     name === "" ||
@@ -152,7 +154,7 @@ $(document).ready(function () {
 */
 
 $(document).ready(function () {
-    $("#submitbtnArea").click(function (e) {
+    $("#submitbtnArea").on('click',function (e) {
         e.preventDefault();
 
         var area = $("#area").val();
@@ -164,7 +166,8 @@ $(document).ready(function () {
                 $("#ModRegDepart").modal("show");
             } else {
                 if (area.length != "") {
-                    $("#DepartRegister").submit();
+                    $("#DepartRegister").trigger("submit");
+
                 } else {
                     $("#area-repit").hide();
                     $("#complet-campos").show();
@@ -192,7 +195,7 @@ $(document).ready(function () {
         modal.find("#edit-area-form").attr("action", url);
     });
 
-    $("#editAreaBtn").click(function (e) {
+    $("#editAreaBtn").on('click',function (e) {
         e.preventDefault();
         var modal = $("#ModEditArea");
         var editarea = $("#editeArea").val();
@@ -203,7 +206,8 @@ $(document).ready(function () {
             $("#complet-campos-edit").show();
             $("#ModEditArea").modal("show");
         } else if (editarea === valorOriginal) {
-            $("#edit-area-form").submit();
+            $("#edit-area-form").trigger("submit");
+
         } else {
             verificarArea(editarea, function (areaRepetida) {
                 if (areaRepetida) {
@@ -211,7 +215,8 @@ $(document).ready(function () {
                     $("#area-repit-edit").show();
                     $("#ModEditArea").modal("show");
                 } else {
-                    $("#edit-area-form").submit();
+                    $("#edit-area-form").trigger("submit");
+
                 }
             });
         }
@@ -219,7 +224,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $("#submitbtnMedic").click(function (e) {
+    $("#submitbtnMedic").on('click',function (e) {
         e.preventDefault();
 
         var price = $("#price").val();
@@ -260,7 +265,7 @@ $(document).ready(function () {
         modal.find("#edit_form_medicine").attr("action", url);
     });
 
-    $("#editMedicBtn").click(function (e) {
+    $("#editMedicBtn").on('click',function (e) {
         e.preventDefault();
         var modal = $("#ModEditMedicine");
         var editProd = $("#product-edit").val();
@@ -279,11 +284,13 @@ $(document).ready(function () {
                         $("#product-repit-edit").show();
                         modal.modal("show");
                     } else {
-                        $("#edit_form_medicine").submit();
+                        $("#edit_form_medicine").trigger("submit");
+
                     }
                 });
             } else {
-                $("#edit_form_medicine").submit();
+                $("#edit_form_medicine").trigger("submit");
+
             }
         } else {
             $("#complet-campos-edit-medi").show();
@@ -293,13 +300,14 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $("#btnInvDet").click(function (e) {
+    $("#btnInvDet").on('click',function (e) {
         e.preventDefault();
         var amount = parseInt($("#amount").val(), 10); // Convertir a número entero
         var medicine = $("#id_medicine").val();
 
         if (!isNaN(amount) && amount > 0 && medicine !== null) {
-            $("#invoiceDetall").submit();
+            $("#invoiceDetall").trigger("submit");
+
         } else if (amount === null || medicine == null) {
             $("#complet-campos").show();
             $("#amount-fail").hide();

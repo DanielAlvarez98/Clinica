@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GenderEnum;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,12 @@ class PatientController extends Controller
     }
     public function index(Request $request)
     {
+        $genders = GenderEnum::getInstances();
+
         if($request->ajax()){
             return $this->allPatients->getDatatable();
         }
-        return view('patient.index');
+        return view('patient.index',['genders' => $genders]);
 
 
     }

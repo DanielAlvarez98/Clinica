@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Employee,Role};
+use App\Enums\GenderEnum;
+use App\Http\Requests\StoreUserRequest;
+use App\Models\{Employee, Role};
 use Illuminate\Http\Request;
 
 use App\Services\AllService;
@@ -14,64 +16,71 @@ class EmployeeController extends Controller
 
     public function __construct(AllService $allService)
     {
-        $this->allService=$allService;
+        $this->allService = $allService;
     }
     public function index()
     {
-        $employees=Employee::whereHas('roles', function ($query) {
+        $genders = GenderEnum::getInstances();
+        $employees = Employee::whereHas('roles', function ($query) {
             $query->where('rol', '!=', 'Administrador');
         })->get();
-        $roles=Role::all();
-        return view('employee.index',['employees'=>$employees,'roles'=>$roles]);
+        $roles = Role::all();
+        return view('employee.index', ['employees' => $employees, 'roles' => $roles, 'genders' => $genders]);
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $data = $request->all();
-        
-        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        $imagen = $request->file('photo');
-        $nombreArchivo = md5(time() . $imagen->getClientOriginalName()) . '.' . $imagen->getClientOriginalExtension();
-        $rutaArchivo = 'assets/img/fotos/' . $nombreArchivo;
+        try {
+            $data = $request->validated();
 
-        $imagen->move(public_path('assets/img/fotos/'), $nombreArchivo);
+            if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+                $imagen = $request->file('photo');
+                $nombreArchivo = md5(time() . $imagen->getClientOriginalName()) . '.' . $imagen->getClientOriginalExtension();
+                $rutaArchivo = 'assets/img/fotos/' . $nombreArchivo;
 
-        $data['photo'] = $rutaArchivo;
-        }else {
-            $data['photo'] = 'assets/img/fotos/default.png'; 
-        }
+                $imagen->move(public_path('assets/img/fotos/'), $nombreArchivo);
 
-        $this->allService->store(Employee::class, $data);
+                $data['photo'] = $rutaArchivo;
+            } else {
+                $data['photo'] = 'assets/img/fotos/default.png';
+            }
+
+            $this->allService->store(Employee::class, $data);
 
             return redirect()->route('employee.index')->with('flash_message', 'Addedd!');
+        } catch (\Throwable $th) {
+            return response()->json([
+                'data' => $data
+            ]);
         }
+    }
 
 
     public function editAjax(Employee $employee)
     {
         return response()->json([
-            'id_rol'=>$employee->id_rol,
-            'rol_name'=>$employee->roles->rol,
-            'name'=>$employee->name,
-            'lastname'=>$employee->lastname,
-            'dni'=>$employee->dni,
-            'email'=>$employee->email,
-            'gender'=>$employee->gender,
-            'birthdate'=>$employee->birthdate,
-            'photo'=>$employee->photo,
+            'id_rol' => $employee->id_rol,
+            'rol_name' => $employee->roles->rol,
+            'name' => $employee->name,
+            'lastname' => $employee->lastname,
+            'dni' => $employee->dni,
+            'email' => $employee->email,
+            'gender' => $employee->gender,
+            'birthdate' => $employee->birthdate,
+            'photo' => $employee->photo,
         ]);
     }
 
 
     public function update(Request $request, Employee $employee)
     {
-        $data=$request->all();
+        $data = $request->all();
 
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             $imagen = $request->file('photo');
             $nombreArchivo = md5(time() . $imagen->getClientOriginalName()) . '.' . $imagen->getClientOriginalExtension();
             $rutaArchivo = 'assets/img/fotos/' . $nombreArchivo;
-    
+
             if ($employee->url_img != '') {
                 $rutaImagenAnterior = public_path($employee->photo);
                 if (file_exists($rutaImagenAnterior)) {
@@ -83,8 +92,8 @@ class EmployeeController extends Controller
         } else {
             $data['photo'] = $employee->photo;
         }
-        
-        $this->allService->updateModel($employee,$data);
+
+        $this->allService->updateModel($employee, $data);
 
         return redirect()->route('employee.index')->with('flash_message', 'Updated!');
     }
@@ -93,9 +102,6 @@ class EmployeeController extends Controller
     {
         $this->allService->deletePhoto($employee->photo);
         $this->allService->deleteModel(Employee::class, $employee->id);
-        return redirect()->route('employee.index')->with('flash_message', 'Deleted!');  
+        return redirect()->route('employee.index')->with('flash_message', 'Deleted!');
     }
-    
-    
-
 }
