@@ -12,7 +12,8 @@ use App\Http\Controllers\{
     InvoiceController,
     HistoryController,
     ScheduleController,
-    FolderController
+    FolderController,
+    PayPalController
 };
 
 /*
@@ -143,6 +144,11 @@ Route::patch('/Facturas/Detalles/Actualizar/{invoice}/{medicine}', [InvoiceContr
 Route::get('/Facturas/Detalles/editarAjax/{invoice}/{medicine}', [InvoiceController::class, 'invDetUpdateAjax'])->name('invoiceDet.UpdateAjax');
 Route::delete('/Facturas/Eliminar-Detalle/{invoice}/{medicine}', [InvoiceController::class, 'DetInvoiceDelete'])->name('invoiceDetaills.delete');
 
+
+Route::get('paypal', [PayPalController::class, 'index'])->name('paypal');
+Route::get('paypal/payment', [PayPalController::class, 'payment'])->name('paypal.payment');
+Route::get('paypal/payment/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.payment.success');
+Route::get('paypal/payment/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.payment/cancel');
 
 
 

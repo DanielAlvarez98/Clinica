@@ -50,7 +50,8 @@ class EmployeeController extends Controller
             return redirect()->route('employee.index')->with('flash_message', 'Addedd!');
         } catch (\Throwable $th) {
             return response()->json([
-                'data' => $data
+                'data' => $data,
+                'status' => 200
             ]);
         }
     }

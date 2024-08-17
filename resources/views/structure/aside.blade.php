@@ -89,6 +89,14 @@
             <span class="nav-link-text ms-1">Facturas</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark " href="{{ route('paypal')}}">
+            <div class="text-dark text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">receipt_long</i>
+            </div>
+            <span class="nav-link-text ms-1">PayPal</span>
+          </a>
+        </li>
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-8">Account pages</h6>
         </li>
